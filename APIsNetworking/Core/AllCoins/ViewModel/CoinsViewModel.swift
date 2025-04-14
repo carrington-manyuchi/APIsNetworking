@@ -13,13 +13,19 @@ class CoinsViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let service = CoinDataService()
-    
+
     init() {
-        //fetchPrice(coin: "bitcoin")
-        fetchCoins()
+        Task { try await  fetchCoins() }
     }
     
-    func fetchCoins() {
+    func fetchCoins() async throws {
+        let coins = await service.fetchCoins()
+        DispatchQueue.main.async {
+            self.coins = coins
+        }
+    }
+    
+    func fetchCoinsWithCompletionHandler() {
         service.fetchCoinsWithResult { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
