@@ -13,10 +13,22 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            if let errorMessage = coinsViewModel.errorMessage {
-                Text(errorMessage)
-            } else {
-                Text("\(coinsViewModel.coin): \(coinsViewModel.price)")
+            List {
+                ForEach(coinsViewModel.coins) { coin in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(coin.name)
+                                .fontWeight(.semibold)
+                            Text(coin.symbol.uppercased())
+                        }
+                    }
+                    .font(.footnote)
+                }
+            }
+            .overlay {
+                if let error = coinsViewModel.errorMessage {
+                    Text(error)
+                }
             }
         }
         .padding()
